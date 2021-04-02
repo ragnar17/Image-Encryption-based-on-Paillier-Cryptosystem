@@ -1,4 +1,4 @@
-import paillier
+import floating_point as fp
 import modOperations as modOp
 def Secure_Image_Adjustment_Brightness_Control(enc_img, v, pb):
 	"""
@@ -7,9 +7,10 @@ def Secure_Image_Adjustment_Brightness_Control(enc_img, v, pb):
 	"""
 	n,m = len(enc_img), len(enc_img[0])
 	ret_img = enc_img.copy()
+	enc_v = fp.encryptFP(pb,v)
 	for i in range(n):
 		for j in range(m):
-			ret_img[i][j] = paillier.homomorphicAddP(pb,enc_img[i][j],v)
+			ret_img[i][j] = fp.addEncEnc(pb,enc_img[i][j],enc_v)
 	return ret_img
 
 def Secure_Image_Adjustment_Image_negation(enc_img, l,pb):
@@ -18,15 +19,15 @@ def Secure_Image_Adjustment_Image_negation(enc_img, l,pb):
 	l : encrypted L(grey levels in the range [0,L−1].)
 	"""
 	l = 255
-	enc_l = paillier.encrypt(pb,l)
+	enc_l = fp.encryptFP(pb,l)
 	n,m = len(enc_img), len(enc_img[0])
 	ret_img = enc_img.copy()
 	for i in range(n):
 		for j in range(m):
-			ret_img[i][j] = paillier.homomorphicSubCC(pb,enc_l,enc_img[i][j])
+			ret_img[i][j] = fp.subtractEncEnc(pb,enc_l,enc_img[i][j])
 	return ret_img
 
-def Secure_Noise_Reduction_LPF(enc_img, px, py,pb):
+def Secure_Noise_Reduction_LPF(enc_img, px, py,pb,pr):
 	"""
 	Mean filter, average over nearest n * m pixels patch
 	enc_img : encrypted image
@@ -35,18 +36,20 @@ def Secure_Noise_Reduction_LPF(enc_img, px, py,pb):
 	"""
 	n,m = len(enc_img), len(enc_img[0])
 	ret_img = enc_img.copy()
-
+	
 	for i in range(n):
 		for j in range(m):
-			tmp_ij = paillier.encrypt(pb,0)
+			tmp_ij = fp.encryptFP(pb,0)
 			den = 0
 			for ii in range(max(0, i - px), min(n - 1, i + px)):
 				for jj in range(max(0, j - py), min(m - 1, j + py)):
 					den += 1
-					tmp_ij = paillier.homomorphicAddC(pb,tmp_ij,enc_img[ii][jj])
-			tmp_ij = paillier.homomorphicDivision(pb,tmp_ij,den)
+					tmp_ij = fp.addEncEnc(pb,tmp_ij,enc_img[ii][jj])
+			tmp_ij = fp.multiplyEncPlain(pb,tmp_ij,1/den)
 			ret_img[i][j] = tmp_ij
 	return ret_img
+
+
 
 # def sobelOperator(enc_img,kerX,kerY,pb):
 # 	ret_img = enc_img.copy()

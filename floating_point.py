@@ -1,5 +1,6 @@
 import paillier
 
+f = 2
 class FloatingPoint:
 	def __init__(self, mantissa, exponent):
 		self.mantissa = mantissa
@@ -12,10 +13,15 @@ def encryptFP(pb, x):
 	x = 3.54 or 23.12 or 23
 	returns an obj of type FloatingPoint, after encrypting x with pb
 	"""
-	f = 15
 	e = -f
 	x = int(x * (10 ** f))
-	while x % 10 == 0:
+	if x==0 :
+		e = 0
+	cnt = 0
+	while x % 10 == 0 and x:
+		cnt+=1
+		if cnt > 30:
+			break
 		x = x // 10
 		e += 1
 	return FloatingPoint(paillier.encrypt(pb, x), e)
@@ -50,15 +56,24 @@ def addEncEnc(pb,x, y):
 
 	return FloatingPoint(res_mantissa, res_exponenet)
 
+def addEncConst(pb,x,y):
+	enc_y = encryptFP(pb,y)
+	return addEncEnc(pb,x,enc_y)
+
 def multiplyEncPlain(pb,x, y):
 	"""
 	Multiplies encrypted x with plain text FP y 
 	"""
 	# rewriting y
-	f = 15
 	e = -f
 	y = int(y * (10 ** f))
-	while y % 10 == 0:
+	if y==0 :
+		e = 0
+	cnt = 0
+	while y % 10 == 0 and y:
+		cnt+=1
+		if cnt > 30:
+			break
 		y = y // 10
 		e += 1
 
@@ -83,13 +98,8 @@ def subtractEncEnc(pb,x,y):
 	return FloatingPoint(res_mantissa, res_exponenet)
 
 
-# pr,pb = paillier.generateKeypair(9)
+# pr,pb = paillier.generateKeypair(60)
 
-# x = encryptFP(pb, 5)
+# x = encryptFP(pb, 15)
 # y = encryptFP(pb, 2)
 
-# print(getValue(pr, pb, x))
-# print(getValue(pr, pb, y))
-# print(getValue(pr,pb,subtractEncEnc(pb,y,x)))
-# print(getValue(pr,pb,addEncEnc(pb,x,y)))
-# print(getValue(pr, pb, multiplyEncPlain(pb,x, 3)))
