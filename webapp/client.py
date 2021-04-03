@@ -32,7 +32,8 @@ v = 100
 
 # ***************************************************************
 # http-requset sample
-url = "http://localhost:5000/brightness_control"
+# url = "http://localhost:5000/brightness_control"
+url = "http://pailliercryptosystem.pythonanywhere.com/brightness_control"
 args = {
 	'enc_img' : bb,
 	'v' : v,
