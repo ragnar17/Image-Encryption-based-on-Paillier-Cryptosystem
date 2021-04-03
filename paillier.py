@@ -25,6 +25,7 @@ def generateKeypair(bits,k = 128 ):
 	while(p==q):
 		q = rabinMiller.generatePrime(bits,k)
 	# p,q = 463,487 # why?
+	p,q = 668474771,940044349
 	n = p*q
 	phi = (p-1)*(q-1)
 	l = phi//math.gcd(p-1,q-1)
@@ -80,20 +81,3 @@ def homomorphicDivision(pb,c,p):
 	pdash = modOp.invMod(p,pb.n)
 	return modOp.expoMod(c,pdash,pb.n2)
 	
-# pr,pb = generateKeypair(9)
-# print(repr(pb),repr(pr))
-# enc = encrypt(pb,140)
-# dec = decrypt(pr,pb,enc)
-# print(dec)
-# print("encoding",enc)
-# enc5 = encrypt(pb,184)
-
-# bb = homomorphicMul(pb, enc, 2)
-
-# print(decrypt(pr, pb, bb))
-
-# val = modOp.invMod(enc,pb.n2)
-# val = (val*enc5)%pb.n2
-# print(decrypt(pr,pb,val))
-# print("Res : ",homomorphicAddP(pb,encrypt(pb,3),3))
-# print(decrypt(pr,pb,homomorphicMul(pb,encrypt(pb,3),3)))

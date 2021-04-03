@@ -1,6 +1,6 @@
 import paillier
 
-f = 2
+f = 5
 class FloatingPoint:
 	def __init__(self, mantissa, exponent):
 		self.mantissa = mantissa
@@ -17,11 +17,7 @@ def encryptFP(pb, x):
 	x = int(x * (10 ** f))
 	if x==0 :
 		e = 0
-	cnt = 0
 	while x % 10 == 0 and x:
-		cnt+=1
-		if cnt > 30:
-			break
 		x = x // 10
 		e += 1
 	return FloatingPoint(paillier.encrypt(pb, x), e)
@@ -69,11 +65,7 @@ def multiplyEncPlain(pb,x, y):
 	y = int(y * (10 ** f))
 	if y==0 :
 		e = 0
-	cnt = 0
 	while y % 10 == 0 and y:
-		cnt+=1
-		if cnt > 30:
-			break
 		y = y // 10
 		e += 1
 
@@ -98,8 +90,9 @@ def subtractEncEnc(pb,x,y):
 	return FloatingPoint(res_mantissa, res_exponenet)
 
 
-# pr,pb = paillier.generateKeypair(60)
+# pr,pb = paillier.generateKeypair(30)
 
-# x = encryptFP(pb, 15)
+# x = encryptFP(pb, 128)
+# print(getValue(pr,pb,x),x)
 # y = encryptFP(pb, 2)
 
