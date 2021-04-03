@@ -17,7 +17,7 @@ def encryptFP(pb, x):
 	x = int(x * (10 ** f))
 	if x==0 :
 		e = 0
-	while x % 10 == 0 and x:
+	while x % 10 == 0 and x>0:
 		x = x // 10
 		e += 1
 	return FloatingPoint(paillier.encrypt(pb, x), e)
@@ -65,7 +65,7 @@ def multiplyEncPlain(pb,x, y):
 	y = int(y * (10 ** f))
 	if y==0 :
 		e = 0
-	while y % 10 == 0 and y:
+	while y % 10 == 0 and y>0:
 		y = y // 10
 		e += 1
 

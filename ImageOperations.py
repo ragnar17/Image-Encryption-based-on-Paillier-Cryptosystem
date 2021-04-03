@@ -53,22 +53,27 @@ def Secure_Noise_Reduction_LPF(enc_img, px, py,pb):
 	return ret_img
 
 
-# def sobelOperator(enc_img,kerX,kerY,pb):
-# 	ret_img = enc_img.copy()
-# 	n,m = len(enc_img), len(enc_img[0])
-# 	for i in range(n-2):
-# 		for j in range(m-2):
-# 			subMat = []
-# 			for k in range(i,i+3):
-# 				tmp = []
-# 				for l in range(j,j+3):
-# 					tmp.append(enc_img[k][l]);
-# 				subMat.append(tmp)
-# 			for k in range(len(kerX)):
+def sobelOperator(enc_img,ker,pb):
+	ret_img = copy.deepcopy(enc_img)
+	n,m = len(enc_img), len(enc_img[0])
+	kz = len(ker)
 
-# 			g = np.multiply(subMat,kerX)
-# 			gx = np.sum(g)
-# 			g = np.multiply(subMat,kerY)
-# 			gy = np.sum(g)
-# 			c[i][j] = min(255,np.sqrt(gx*gx+gy*gy))
-# 	return c
+	for i in range(n-(kz-1)):
+		for j in range(m-(kz-1)):
+
+			tmp_ij_neg = fp.encryptFP(pb,0)
+			tmp_ij_pos = fp.encryptFP(pb,0)
+			for k in range(i,i+kz):
+				for l in range(j,j+kz):
+					if ker[k-i][l-j] == 0 :
+						continue
+					elif ker[k-i][l-j] < 0 :
+						val = fp.multiplyEncPlain(pb,enc_img[k][l],abs(ker[k-i][l-j]))
+						tmp_ij_neg = fp.addEncEnc(pb,tmp_ij_neg,val)
+					else :
+						val = fp.multiplyEncPlain(pb,enc_img[k][l],abs(ker[k-i][l-j]))
+						tmp_ij_pos = fp.addEncEnc(pb,tmp_ij_pos,val)
+
+			ret_img[i][j] = fp.subtractEncEnc(pb,tmp_ij_pos,tmp_ij_neg)
+
+	return ret_img

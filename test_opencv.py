@@ -25,14 +25,14 @@ for i in range(len(c)):
 m = copy.deepcopy(c)
 
 v = 100
-xx = cryp.Secure_Image_Adjustment_Brightness_Control(bb,v,pb)
-xx = cryp.Secure_Image_Adjustment_Image_negation(bb,v,pb)
-xx = cryp.Secure_Noise_Reduction_LPF(bb,2,2,pb)
-
-
+# xx = cryp.Secure_Image_Adjustment_Brightness_Control(bb,v,pb)
+# xx = cryp.Secure_Image_Adjustment_Image_negation(bb,v,pb)
+# xx = cryp.Secure_Noise_Reduction_LPF(bb,2,2,pb)
+kerX = [[1,0,-1],[2,0,-2],[1,0,-1]]
+xx = cryp.sobelOperator(bb,kerX,pb)
 for i in range(len(c)):
 	for j in range(len(c[i])):
-		m[i][j] = min(255,int(fp.getValue(pr,pb,xx[i][j])))
+		m[i][j] = max(0,min(255,int(fp.getValue(pr,pb,xx[i][j]))))
 
 
 cv2.imshow('Naive',m)
