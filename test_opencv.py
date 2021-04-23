@@ -4,6 +4,8 @@ import numpy as np
 import ImageOperations as cryp
 import floating_point as fp
 import copy
+import pickle
+import requests
 path = 'images/a.png'
 # path = 'images/acolor.tiff'
 # path = 'images/1000px-image.jpg'
@@ -33,8 +35,10 @@ xx = cryp.sobelOperator(bb,kerX,pb)
 for i in range(len(c)):
 	for j in range(len(c[i])):
 		m[i][j] = max(0,min(255,int(fp.getValue(pr,pb,xx[i][j]))))
-
-
+print(xx)
+# print(data)
+n,m = 50,50
+img = np.zeros([n,m],dtype=np.uint8)
 cv2.imshow('Naive',m)
 
 cv2.waitKey(0)

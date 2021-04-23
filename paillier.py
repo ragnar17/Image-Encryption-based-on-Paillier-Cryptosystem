@@ -24,8 +24,6 @@ def generateKeypair(bits,k = 128 ):
 	q = rabinMiller.generatePrime(bits,k)
 	while(p==q):
 		q = rabinMiller.generatePrime(bits,k)
-	# p,q = 463,487 # why?
-	p,q = 668474771,940044349
 	n = p*q
 	phi = (p-1)*(q-1)
 	l = phi//math.gcd(p-1,q-1)
